@@ -1,0 +1,184 @@
+@model IEnumerable<LibraryManagementSystem.Models.Book>
+@{
+    ViewData["Title"] = "Books List";
+}
+
+<div class="books-page">
+    <!-- Top Greeting & Stats (Image 2) -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">Welcome back, Admin</h4>
+            <h5 class="text-secondary fw-semibold">Books list</h5>
+        </div>
+        <div class="text-end">
+            <div class="fs-6 fw-bold text-dark">
+                Total books: <span class="text-primary">@(ViewBag.TotalCount ?? Model.Count())</span>
+            </div>
+            <div class="small text-muted">
+                Current active: <span class="text-success fw-semibold">@(ViewBag.ActiveCount ?? Model.Count(b => b.IsActive))</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search, Filter & Add Button Bar (Image 2) -->
+    <div class="custom-card mb-4">
+        <div class="p-3">
+            <form method="get" asp-action="Index" class="row g-2 align-items-center">
+                <div class="col-lg-5 col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0">
+                            <i class="bi bi-search text-muted"></i>
+                        </span>
+                        <input type="text" name="searchString" value="@ViewBag.CurrentSearch" 
+                               class="form-control border-start-0" 
+                               placeholder="Search by author / book / publishing houses..." />
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-3">
+                    <select name="category" class="form-select">
+                        <option value="">All Categories</option>
+                        @if (ViewBag.Categories != null)
+                        {
+                            foreach (var cat in (IEnumerable<string>)ViewBag.Categories)
+                            {
+                                <option value="@cat" selected="@(ViewBag.CurrentCategory == cat ? "selected" : null)">@cat</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="col-lg-2 col-md-3">
+                    <select name="status" class="form-select">
+                        <option value="">All Statuses</option>
+                        <option value="Available" selected="@(ViewBag.CurrentStatus == "Available" ? "selected" : null)">Available</option>
+                        <option value="Issued" selected="@(ViewBag.CurrentStatus == "Issued" ? "selected" : null)">Issued</option>
+                        <option value="Reserved" selected="@(ViewBag.CurrentStatus == "Reserved" ? "selected" : null)">Reserved</option>
+                        <option value="Overdue" selected="@(ViewBag.CurrentStatus == "Overdue" ? "selected" : null)">Overdue</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-2 col-md-12 d-flex gap-2">
+                    <button type="submit" class="btn btn-outline-dark flex-grow-1">
+                        <i class="bi bi-funnel me-1"></i> Filter
+                    </button>
+                    <a asp-action="Create" class="btn btn-teal text-nowrap">
+                        <i class="bi bi-plus-lg me-1"></i> Add new book
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Books Table (Image 2) -->
+    <div class="custom-card">
+        <div class="table-responsive">
+            <table class="table table-modern align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Book ID</th>
+                        <th>Book name</th>
+                        <th>Category</th>
+                        <th>Author</th>
+                        <th>Publisher</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="fw-bold text-muted">#@item.Id</td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <img src="@(string.IsNullOrEmpty(item.CoverImageUrl) ? "/images/covers/book1001.svg" : item.CoverImageUrl)" 
+                                             alt="@item.Title" class="book-thumb" />
+                                        <div>
+                                            <a asp-action="Details" asp-route-id="@item.Id" class="fw-bold text-dark text-decoration-none d-block">
+                                                @item.Title
+                                            </a>
+                                            @if (!string.IsNullOrEmpty(item.AlternateTitle))
+                                            {
+                                                <small class="text-muted">@item.AlternateTitle</small>
+                                            }
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-light text-dark border">@item.Category</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="author-avatar">
+                                            @(item.Author.Length > 0 ? item.Author.Substring(0, 1).ToUpper() : "A")
+                                        </span>
+                                        <span>@item.Author</span>
+                                    </div>
+                                </td>
+                                <td class="text-muted">
+                                    @(string.IsNullOrEmpty(item.Publisher) ? "Dar al-shorouk" : item.Publisher)
+                                </td>
+                                <td class="fw-semibold">
+                                    @(item.Price > 0 ? item.Price.ToString("N0") + " ₼" : "0.00 ₼")
+                                </td>
+                                <td>
+                                    <div class="form-check form-switch m-0">
+                                        <input class="form-check-input status-switch" type="checkbox" role="switch" 
+                                               data-book-id="@item.Id" @(item.IsActive ? "checked" : "") id="switch-@item.Id" />
+                                        <label class="form-check-label small ms-1 @(item.IsActive ? "text-success" : "text-muted")" id="status-label-@item.Id" for="switch-@item.Id">
+                                            @(item.IsActive ? "Active" : "Inactive")
+                                        </label>
+                                    </div>
+                                </td>
+                                <td class="text-center text-nowrap">
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info me-1" title="Details">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning me-1" title="Edit">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger" title="Delete">
+                                        <i class="bi bi-trash3"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="8" class="text-center py-5 text-muted">
+                                <i class="bi bi-folder-x fs-1 d-block mb-2 text-secondary"></i>
+                                No books found matching your criteria.
+                                <div class="mt-2">
+                                    <a asp-action="Index" class="btn btn-sm btn-outline-secondary">Clear filter</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Table Pagination Footer (Image 2) -->
+        <div class="p-3 border-top d-flex flex-wrap justify-content-between align-items-center">
+            <span class="small text-muted">
+                Showing 1 to @Model.Count() of @(ViewBag.TotalCount ?? Model.Count()) entries
+            </span>
+            <nav aria-label="Books navigation">
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item disabled"><a class="page-link" href="#"><i class="bi bi-chevron-left"></i></a></li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">4</a></li>
+                    <li class="page-item"><a class="page-link" href="#"><i class="bi bi-chevron-right"></i></a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>

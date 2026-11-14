@@ -1,0 +1,140 @@
+@model LibraryManagementSystem.Models.Book
+@{
+    ViewData["Title"] = "Add a Book";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-9 col-xl-8">
+        <div class="form-box">
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+                <h3 class="fw-bold mb-0 text-dark">Add a Book</h3>
+                <a asp-action="Index" class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-1"></i> Return to Books List
+                </a>
+            </div>
+
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2" role="alert"></div>
+
+                <!-- Book Name* (Image 3) -->
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label-custom">
+                        Book Name<span class="required-star">*</span>
+                    </label>
+                    <input asp-for="Title" class="form-control form-control-custom" placeholder="Enter book title" />
+                    <span asp-validation-for="Title" class="text-danger small"></span>
+                </div>
+
+                <!-- AlternateTitle (Image 3) -->
+                <div class="mb-3">
+                    <label asp-for="AlternateTitle" class="form-label-custom">
+                        AlternateTitle
+                    </label>
+                    <input asp-for="AlternateTitle" class="form-control form-control-custom" placeholder="Optional subtitle or alternate title" />
+                    <span asp-validation-for="AlternateTitle" class="text-danger small"></span>
+                </div>
+
+                <!-- Author Name* (Image 3) -->
+                <div class="mb-3">
+                    <label asp-for="Author" class="form-label-custom">
+                        Author Name<span class="required-star">*</span>
+                    </label>
+                    <input asp-for="Author" class="form-control form-control-custom" placeholder="Enter author full name" />
+                    <span asp-validation-for="Author" class="text-danger small"></span>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Language" class="form-label-custom">
+                            Language
+                        </label>
+                        <input asp-for="Language" class="form-control form-control-custom" placeholder="Language (e.g. English, Azerbaijani)" />
+                        <span asp-validation-for="Language" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Publisher" class="form-label-custom">
+                            Publisher
+                        </label>
+                        <input asp-for="Publisher" class="form-control form-control-custom" placeholder="Publishing house" />
+                        <span asp-validation-for="Publisher" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="CopiesAvailable" class="form-label-custom">
+                            No.of Copies Available<span class="required-star">*</span>
+                        </label>
+                        <input asp-for="CopiesAvailable" type="number" class="form-control form-control-custom" min="0" />
+                        <span asp-validation-for="CopiesAvailable" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Category" class="form-label-custom">
+                            Categories<span class="required-star">*</span>
+                        </label>
+                        <select asp-for="Category" asp-items="ViewBag.CategoryList" class="form-select form-select-custom">
+                            <option value="">Select Category</option>
+                        </select>
+                        <span asp-validation-for="Category" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Price" class="form-label-custom">
+                            Price (₼)
+                        </label>
+                        <input asp-for="Price" type="number" step="0.01" class="form-control form-control-custom" placeholder="0.00" />
+                        <span asp-validation-for="Price" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Status" class="form-label-custom">
+                            Status
+                        </label>
+                        <select asp-for="Status" class="form-select form-select-custom">
+                            <option value="Available">Available</option>
+                            <option value="Issued">Issued</option>
+                            <option value="Reserved">Reserved</option>
+                            <option value="Overdue">Overdue</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <!-- Cover Image URL -->
+                <div class="mb-3">
+                    <label asp-for="CoverImageUrl" class="form-label-custom">
+                        Cover Image URL
+                    </label>
+                    <input asp-for="CoverImageUrl" class="form-control form-control-custom" placeholder="/images/covers/book1001.svg" />
+                    <span asp-validation-for="CoverImageUrl" class="text-danger small"></span>
+                </div>
+
+                <!-- Description -->
+                <div class="mb-4">
+                    <label asp-for="Description" class="form-label-custom">
+                        Description
+                    </label>
+                    <textarea asp-for="Description" rows="3" class="form-control form-control-custom" placeholder="Book description or synopsis..."></textarea>
+                    <span asp-validation-for="Description" class="text-danger small"></span>
+                </div>
+
+                <div class="d-flex align-items-center gap-3 pt-2">
+                    <button type="submit" class="btn btn-submit-coral">
+                        SUBMIT
+                    </button>
+                    <a asp-action="Index" class="btn btn-light border px-4 py-2">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

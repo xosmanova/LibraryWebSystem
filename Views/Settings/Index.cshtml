@@ -1,0 +1,76 @@
+@{
+    ViewData["Title"] = "Settings";
+}
+
+<div class="settings-page">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">Settings</h4>
+            <p class="text-muted small mb-0">System configuration, circulation policies and library information</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="form-box">
+                <h5 class="fw-bold text-dark mb-4 pb-2 border-bottom">Circulation & Loan Policies</h5>
+                <form asp-action="Save" method="post">
+                    <div class="mb-3">
+                        <label class="form-label-custom">Library Organization Name</label>
+                        <input type="text" name="libraryName" value="@ViewBag.LibraryName" class="form-control form-control-custom" />
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label-custom">Official Email</label>
+                            <input type="email" name="contactEmail" value="@ViewBag.ContactEmail" class="form-control form-control-custom" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label-custom">Phone Number</label>
+                            <input type="text" name="contactPhone" value="@ViewBag.ContactPhone" class="form-control form-control-custom" />
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <label class="form-label-custom">Max Loan Period (Days)</label>
+                            <input type="number" name="maxLoanDays" value="@ViewBag.MaxLoanDays" class="form-control form-control-custom" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label-custom">Max Books Per Member</label>
+                            <input type="number" name="maxBooksPerMember" value="@ViewBag.MaxBooksPerMember" class="form-control form-control-custom" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label-custom">Daily Overdue Fine</label>
+                            <input type="text" name="finePerDay" value="@ViewBag.FinePerDay" class="form-control form-control-custom" />
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-teal px-4 py-2">
+                        <i class="bi bi-save me-1"></i> Save Changes
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="custom-card p-4 mb-4">
+                <h6 class="fw-bold text-dark mb-3"><i class="bi bi-server me-2 text-primary"></i> System Environment</h6>
+                <div class="small">
+                    <div class="mb-2">
+                        <span class="text-muted d-block">Database Engine:</span>
+                        <strong class="text-dark">@ViewBag.DatabaseProvider</strong>
+                    </div>
+                    <div class="mb-2">
+                        <span class="text-muted d-block">Version:</span>
+                        <span class="badge bg-success-subtle text-success border border-success-subtle">@ViewBag.SystemVersion</span>
+                    </div>
+                    <div class="mb-2">
+                        <span class="text-muted d-block">System Status:</span>
+                        <span class="text-success fw-semibold"><i class="bi bi-circle-fill me-1" style="font-size: 8px;"></i> All systems operational</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

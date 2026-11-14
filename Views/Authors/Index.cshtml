@@ -1,0 +1,81 @@
+@model IEnumerable<LibraryManagementSystem.Models.Author>
+@{
+    ViewData["Title"] = "Authors";
+}
+
+<div class="authors-page">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">Authors</h4>
+            <p class="text-muted small mb-0">Authors directory and cataloged works</p>
+        </div>
+        <button type="button" class="btn btn-teal" data-bs-toggle="modal" data-bs-target="#addAuthorModal">
+            <i class="bi bi-person-plus-fill me-1"></i> Add Author
+        </button>
+    </div>
+
+    <div class="row g-4">
+        @foreach (var a in Model)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="custom-card p-4 h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <img src="@(string.IsNullOrEmpty(a.AvatarUrl) ? "/images/avatars/avatar1.svg" : a.AvatarUrl)" alt="@a.Name" class="avatar-sm" style="width: 50px; height: 50px;" />
+                            <div>
+                                <h5 class="fw-bold text-dark mb-0">@a.Name</h5>
+                                <span class="badge bg-light text-muted border small"><i class="bi bi-geo-alt me-1"></i> @a.Country</span>
+                            </div>
+                        </div>
+                        <p class="text-muted small mb-3" style="min-height: 48px;">
+                            @(string.IsNullOrEmpty(a.Biography) ? "No biography available." : a.Biography)
+                        </p>
+                    </div>
+
+                    <div class="border-top pt-3 d-flex justify-content-between align-items-center">
+                        <span class="badge bg-info-subtle text-info border border-info-subtle">@a.PopularGenre</span>
+                        <span class="small fw-semibold text-dark"><i class="bi bi-book me-1 text-primary"></i> @a.BooksCount Books</span>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Modal: Add Author -->
+<div class="modal fade" id="addAuthorModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="Create" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">New Author</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Author Name</label>
+                        <input type="text" name="Name" required class="form-control" placeholder="Author full name" />
+                    </div>
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-semibold">Country</label>
+                            <input type="text" name="Country" class="form-control" placeholder="Country" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-semibold">Primary Genre</label>
+                            <input type="text" name="PopularGenre" value="Novels" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Short Biography</label>
+                        <textarea name="Biography" rows="3" class="form-control" placeholder="Biography overview..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-teal">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

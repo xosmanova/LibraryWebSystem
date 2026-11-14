@@ -1,0 +1,200 @@
+﻿@model LibraryManagementSystem.Models.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+
+    int total = Model.TotalBooks > 0 ? Model.TotalBooks : 1;
+    double issuedPct = Math.Round(((double)Model.IssuedBooks / total) * 100, 1);
+    double reservedPct = Math.Round(((double)Model.ReservedBooks / total) * 100, 1);
+    double overduePct = Math.Round(((double)Model.OverdueBooks / total) * 100, 1);
+    double availablePct = Math.Max(0, Math.Round(100.0 - (issuedPct + reservedPct + overduePct), 1));
+
+    // Real dynamic circulation rate
+    int inCirculationCount = Model.IssuedBooks + Model.ReservedBooks + Model.OverdueBooks;
+    int circulationRate = (int)Math.Round(((double)inCirculationCount / total) * 100);
+
+    // SVG stroke calculations (Circumference of r=15.91549430918954 is exactly 100)
+    // Starting offset at 25 (top 12 o'clock)
+    double offsetIssued = 25.0;
+    double offsetReserved = 25.0 - issuedPct;
+    double offsetOverdue = 25.0 - (issuedPct + reservedPct);
+    double offsetAvailable = 25.0 - (issuedPct + reservedPct + overduePct);
+}
+
+<div class="dashboard-container">
+    <!-- Top Stats Cards (Image 1) -->
+    <div class="row g-3 mb-4">
+        <div class="col-xl col-md-4 col-sm-6">
+            <div class="stat-card card-purple">
+                <div class="stat-icon icon-purple">
+                    <i class="bi bi-book"></i>
+                </div>
+                <div class="stat-value">@Model.TotalBooks</div>
+                <div class="stat-label">Total Books</div>
+            </div>
+        </div>
+        <div class="col-xl col-md-4 col-sm-6">
+            <div class="stat-card card-green">
+                <div class="stat-icon icon-green">
+                    <i class="bi bi-people"></i>
+                </div>
+                <div class="stat-value">@Model.TotalMembers</div>
+                <div class="stat-label">Total Members</div>
+            </div>
+        </div>
+        <div class="col-xl col-md-4 col-sm-6">
+            <div class="stat-card card-cyan">
+                <div class="stat-icon icon-cyan">
+                    <i class="bi bi-journal-check"></i>
+                </div>
+                <div class="stat-value">@Model.IssuedBooks</div>
+                <div class="stat-label">Issued Books</div>
+            </div>
+        </div>
+        <div class="col-xl col-md-6 col-sm-6">
+            <div class="stat-card card-amber">
+                <div class="stat-icon icon-amber">
+                    <i class="bi bi-bookmark-star"></i>
+                </div>
+                <div class="stat-value">@Model.ReservedBooks</div>
+                <div class="stat-label">Reserved Books</div>
+            </div>
+        </div>
+        <div class="col-xl col-md-6 col-sm-6">
+            <div class="stat-card card-red">
+                <div class="stat-icon icon-red">
+                    <i class="bi bi-exclamation-triangle"></i>
+                </div>
+                <div class="stat-value">@Model.OverdueBooks</div>
+                <div class="stat-label">Overdue Books</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Circulation Area (Image 1) -->
+    <div class="row g-4" id="circulation">
+        <!-- Donut Chart Card (Image 1) -->
+        <div class="col-lg-5">
+            <div class="custom-card h-100">
+                <div class="custom-card-header">
+                    <h6 class="custom-card-title">Books Circulation</h6>
+                    <button class="btn btn-sm btn-light text-muted border-0"><i class="bi bi-three-dots-vertical"></i></button>
+                </div>
+                <div class="p-4 d-flex flex-column align-items-center justify-content-center">
+                    <!-- Legend -->
+                    <div class="d-flex flex-wrap justify-content-center gap-3 mb-3 small text-muted">
+                        <span><i class="bi bi-circle-fill text-info me-1"></i> Issued Books</span>
+                        <span><i class="bi bi-circle-fill text-warning me-1"></i> Reserved Books</span>
+                        <span><i class="bi bi-circle-fill text-danger me-1"></i> Overdue Books</span>
+                    </div>
+
+                    <!-- Dynamic Donut SVG with Real Data -->
+                    <div class="donut-chart-container my-3">
+                        <svg width="230" height="230" viewBox="0 0 36 36" class="donut">
+                            <circle class="donut-ring" cx="18" cy="18" r="15.91549430918954" fill="transparent" stroke="#f1f5f9" stroke-width="4"></circle>
+                            
+                            @if (availablePct > 0)
+                            {
+                                <circle class="donut-segment" cx="18" cy="18" r="15.91549430918954" fill="transparent" stroke="#e2e8f0" stroke-width="4" 
+                                        stroke-dasharray="@availablePct @(100 - availablePct)" stroke-dashoffset="@offsetAvailable"></circle>
+                            }
+                            @if (issuedPct > 0)
+                            {
+                                <circle class="donut-segment" cx="18" cy="18" r="15.91549430918954" fill="transparent" stroke="#0dcaf0" stroke-width="4" 
+                                        stroke-dasharray="@issuedPct @(100 - issuedPct)" stroke-dashoffset="@offsetIssued"></circle>
+                            }
+                            @if (reservedPct > 0)
+                            {
+                                <circle class="donut-segment" cx="18" cy="18" r="15.91549430918954" fill="transparent" stroke="#ffc107" stroke-width="4" 
+                                        stroke-dasharray="@reservedPct @(100 - reservedPct)" stroke-dashoffset="@offsetReserved"></circle>
+                            }
+                            @if (overduePct > 0)
+                            {
+                                <circle class="donut-segment" cx="18" cy="18" r="15.91549430918954" fill="transparent" stroke="#dc3545" stroke-width="4" 
+                                        stroke-dasharray="@overduePct @(100 - overduePct)" stroke-dashoffset="@offsetOverdue"></circle>
+                            }
+                        </svg>
+                        <div class="donut-inner-text">
+                            <div class="donut-percentage">@circulationRate%</div>
+                            <div class="donut-subtext">Circulation</div>
+                        </div>
+                    </div>
+
+                    <!-- Clean Counts Breakdown -->
+                    <div class="d-flex justify-content-center gap-4 mt-2 text-center small text-muted">
+                        <div>
+                            <strong class="text-info d-block fs-6">@Model.IssuedBooks</strong>
+                            <span>Issued</span>
+                        </div>
+                        <div>
+                            <strong class="text-warning d-block fs-6">@Model.ReservedBooks</strong>
+                            <span>Reserved</span>
+                        </div>
+                        <div>
+                            <strong class="text-danger d-block fs-6">@Model.OverdueBooks</strong>
+                            <span>Overdue</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Books Circulation Table (Image 1) -->
+        <div class="col-lg-7">
+            <div class="custom-card h-100">
+                <div class="custom-card-header">
+                    <h6 class="custom-card-title">Books Circulation</h6>
+                    <button class="btn btn-sm btn-light text-muted border-0"><i class="bi bi-three-dots-vertical"></i></button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-modern align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Books Name</th>
+                                <th>Author</th>
+                                <th>Publication</th>
+                                <th>Progress</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.RecentCirculation.Any())
+                            {
+                                @foreach (var item in Model.RecentCirculation)
+                                {
+                                    <tr>
+                                        <td class="fw-semibold text-dark">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <img src="@(string.IsNullOrEmpty(item.CoverImageUrl) ? "/images/covers/book1001.svg" : item.CoverImageUrl)" 
+                                                     alt="@item.Title" class="book-thumb" style="width: 28px; height: 38px;" />
+                                                <a asp-controller="Books" asp-action="Details" asp-route-id="@item.Id" class="text-decoration-none text-dark">
+                                                    @item.Title
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <td class="text-muted">@item.Author</td>
+                                        <td class="text-muted">
+                                            @(string.IsNullOrEmpty(item.Publisher) ? "Dar al-shorouk" : item.Publisher)
+                                        </td>
+                                        <td style="min-width: 140px;">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div class="progress flex-grow-1" style="height: 6px;">
+                                                    <div class="progress-bar bg-success" style="width: 90%;"></div>
+                                                </div>
+                                                <span class="small text-muted fw-semibold">90%</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-center py-4 text-muted">No circulation records found.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
