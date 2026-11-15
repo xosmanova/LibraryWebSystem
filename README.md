@@ -2,12 +2,18 @@
 
 A web-based library and book circulation management system built with **ASP.NET Core MVC** and **Entity Framework Core**, backed by **Microsoft SQL Server**.
 
+## Live Demo
+- **URL:** https://unilibrary.runasp.net
+- **Admin Login:** `admin` / `admin`
+
+---
+
 ## Tech Stack
 - **Backend:** C# / ASP.NET Core MVC (.NET 10.0)
 - **Database:** Microsoft SQL Server / Entity Framework Core
 - **Frontend:** HTML5, CSS3, JavaScript, Bootstrap 5
 
-
+---
 
 ## Core Features
 1. **Dashboard & Analytics:** Live book metrics and dynamic circulation rate chart (Issued, Reserved, Overdue, Available).
@@ -17,8 +23,11 @@ A web-based library and book circulation management system built with **ASP.NET 
 5. **Roles & Permissions:** Role matrix configuring access rights for Administrators, Librarians, Faculty, and Students.
 6. **System Settings:** Configure circulation limits, loan periods, and overdue daily fines.
 
+---
 
 ## Project Structure
+
+```text
 LibraryManagementSystem/
 ├── Controllers/       # Request handlers & application logic
 │   ├── HomeController.cs
@@ -51,7 +60,29 @@ LibraryManagementSystem/
 ├── wwwroot/           # Static assets (CSS, JS, images, SVG covers)
 ├── appsettings.json   # Configuration & database connection
 └── Program.cs         # App entry point & service registration
-
+```
 
 ---
 
+## Local Setup & Run
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/xosmanova/LibraryWebSystem.git
+   cd LibraryWebSystem
+   ```
+
+2. **Configure Connection String in `appsettings.json`:**
+   ```json
+   {
+     "ConnectionStrings": {
+       "DefaultConnection": "Server=.\\SQLEXPRESS;Database=LibraryDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True"
+     }
+   }
+   ```
+
+3. **Run the project:**
+   ```bash
+   dotnet run
+   ```
+   Open `https://localhost:7278` or `http://localhost:5142` in your browser.
