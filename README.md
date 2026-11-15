@@ -2,11 +2,7 @@
 
 A web-based library and book circulation management system built with **ASP.NET Core MVC** and **Entity Framework Core**, backed by **Microsoft SQL Server**.
 
-## Live Demo
-- **URL:** https://unilibrary.runasp.net
-- **Admin Login:** `admin` / `admin`
 
----
 
 ## Tech Stack
 - **Backend:** C# / ASP.NET Core MVC (.NET 10.0)
@@ -64,25 +60,3 @@ LibraryManagementSystem/
 
 ---
 
-## Local Setup & Run
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/xosmanova/LibraryWebSystem.git
-   cd LibraryWebSystem
-   ```
-
-2. **Configure Connection String in `appsettings.json`:**
-   ```json
-   {
-     "ConnectionStrings": {
-       "DefaultConnection": "Server=.\\SQLEXPRESS;Database=LibraryDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True"
-     }
-   }
-   ```
-
-3. **Run the project:**
-   ```bash
-   dotnet run
-   ```
-   Open `https://localhost:7278` or `http://localhost:5142` in your browser.
